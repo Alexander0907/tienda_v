@@ -40,4 +40,46 @@ public class PruebasController {
         model.addAttribute("categorias", categorias);
         return "/pruebas/listado";
     }
+    
+    //Los métodos siguientes son para la prueba de consultas ampliadas
+    @GetMapping("/consulta")
+    public String listado2(Model model) {
+        var productos = productoService.getProductos(false);
+        model.addAttribute("productos", productos);
+        return "/pruebas/consulta";
+    }
+
+    @PostMapping("/query1")
+    public String consultaQuery1(@RequestParam(value = "precioInf") double precioInf,
+            @RequestParam(value = "precioSup") double precioSup, Model model) {
+        var productos = productoService.findByPrecioBetweenOrderByDescripcion(precioInf, precioSup);
+        model.addAttribute("productos", productos);
+        model.addAttribute("precioInf", precioInf);
+        model.addAttribute("precioSup", precioSup);
+        model.addAttribute("totalProductos", productos.size());
+        return "/pruebas/consulta";
+    }
+    
+    @PostMapping("/query2")
+    public String consultaQuery2(@RequestParam(value = "precioInf") double precioInf,
+            @RequestParam(value = "precioSup") double precioSup, Model model) {
+        var productos = productoService.metodoJPQL(precioInf, precioSup);
+        model.addAttribute("productos", productos);        
+        model.addAttribute("totalProductos", productos.size());
+        model.addAttribute("precioInf", precioInf);
+        model.addAttribute("precioSup", precioSup);
+        return "/pruebas/listado2";
+    }
+    
+     @PostMapping("/query3")
+    public String consultaQuery3(@RequestParam(value = "precioInf") double precioInf,
+            @RequestParam(value = "precioSup") double precioSup, Model model) {
+        var productos = productoService.metodoNativo(precioInf, precioSup);
+        model.addAttribute("productos", productos);
+        model.addAttribute("totalProductos", productos.size());
+        model.addAttribute("precioInf", precioInf);
+        model.addAttribute("precioSup", precioSup);
+        return "/pruebas/consulta";
+    }
+    
 }

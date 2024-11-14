@@ -1,0 +1,374 @@
+Recorte 001, plantilla.html
+============
+
+<li><a class="dropdown-item"  th:href="@{/pruebas/consulta}">[[#{plantilla.consultas}]]</a></li>
+
+
+Recorte 002, ProductoDao.java
+============
+
+//Ejemplo de método utilizando Métodos de Query
+public List<Producto> findByPrecioBetweenOrderByDescripcion(double precioInf, double precioSup);
+
+
+Recorte 003, ProductoService.java
+============
+// Lista de productos con precio entre ordendados por descripción ConsultaAmpliada
+public List<Producto> findByPrecioBetweenOrderByDescripcion(double precioInf, double precioSup);
+
+
+Recorte 004, ProductoServiceImpl.java
+============
+
+// Lista de productos con precio entre ordendados por descripción ConsultaAmpliada
+@Override
+@Transactional(readOnly=true)
+public List<Producto> findByPrecioBetweenOrderByDescripcion(double precioInf, double precioSup) {
+  return productoDao.findByPrecioBetweenOrderByDescripcion(precioInf, precioSup);
+}
+
+
+Recorte 005, PruebasController.java
+============
+
+    //Los métodos siguientes son para la prueba de consultas ampliadas
+    @GetMapping("/listado2")
+    public String listado2(Model model) {
+        var productos = productoService.getProductos(false);
+        model.addAttribute("productos", productos);
+        return "/pruebas/listado2";
+    }
+
+    @PostMapping("/query1")
+    public String consultaQuery1(@RequestParam(value = "precioInf") double precioInf,
+            @RequestParam(value = "precioSup") double precioSup, Model model) {
+        var productos = productoService.findByPrecioBetweenOrderByDescripcion(precioInf, precioSup);
+        model.addAttribute("productos", productos);
+        model.addAttribute("precioInf", precioInf);
+        model.addAttribute("precioSup", precioSup);
+        return "/consulta/listado";
+    }
+
+
+Recorte 006, pruebas\listado2.html
+============
+
+ <!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>TechShop</title>
+    </head>
+    <body>
+        <header th:replace="~{layout/plantilla :: header}"/>
+
+        <section th:replace="~{pruebas/fragmentos :: filtros}"/>
+        <section th:replace="~{pruebas/fragmentos :: listadoProductos}"/>
+
+        <footer th:replace="~{layout/plantilla :: footer}"/>       
+    </body>
+</html>
+
+
+Recorte 007, pruebas\fragmentos.html
+============
+
+<!-- 3 Sección para crear los filtros -->
+        <section th:fragment="filtros" class="bg-light">
+            <div class="row py-2">
+                <div class="col-md-1"></div>
+                <div class="col-md-3">
+                    <form method="POST" th:action="@{/pruebas/query1}" 
+                          class="was-validated">
+                        <div class="card">                            
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="precioInf">[[#{pruebas.precio.inferior}]]</label>
+                                    <input type="number" class="form-control" 
+                                           th:value="${precioInf}"
+                                           th:name="precioInf" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="precioSup">[[#{pruebas.precio.superior}]]</label>
+                                    <input type="number" class="form-control" 
+                                           th:value="${precioSup}"
+                                           th:name="precioSup" required="true"/>
+                                </div>
+                            </div>
+                            <div class="card-footer text-center">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-check"></i> [[#{pruebas.ampliadas}]]
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>   
+            </div>
+        </section> 
+
+
+
+Recorte 008, ProductoDao.java
+============
+
+ //Ejemplo de método utilizando Consultas con JPQL
+    @Query(value="SELECT a FROM Producto a where a.precio BETWEEN :precioInf AND :precioSup ORDER BY a.descripcion ASC")
+    public List<Producto> metodoJPQL(@Param("precioInf") double precioInf, @Param("precioSup") double precioSup);
+   
+
+Recorte 009, ProductoService.java
+============
+
+    //Lista de productos utilizando consultas con JPQL    
+    public List<Producto> metodoJPQL(double precioInf, double precioSup);
+
+
+Recorte 010, ProductoServiceImpl.java
+============
+
+    @Override
+    @Transactional(readOnly=true)    
+    public List<Producto> metodoJPQL(double precioInf, double precioSup) {
+        return productoDao.metodoJPQL(precioInf, precioSup);
+    }
+
+Recorte 011, PruebasController.java
+============
+
+@PostMapping("/query2")
+    public String consultaQuery2(@RequestParam(value = "precioInf") double precioInf,
+            @RequestParam(value = "precioSup") double precioSup, Model model) {
+        var productos = productoService.metodoJPQL(precioInf, precioSup);
+        model.addAttribute("productos", productos);        
+        model.addAttribute("totalProductos", productos.size());
+        model.addAttribute("precioInf", precioInf);
+        model.addAttribute("precioSup", precioSup);
+        return "/pruebas/consulta";
+    }
+
+Recorte 012, pruebas\fragmentos.html
+============
+
+<div class="col-md-3">
+                    <form method="POST" th:action="@{/pruebas/query2}" 
+                          class="was-validated">
+                        <div class="card">                            
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="precioInf">[[#{pruebas.precio.inferior}]]</label>
+                                    <input type="number" class="form-control" 
+                                           th:value="${precioInf}"
+                                           th:name="precioInf" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="precioSup">[[#{pruebas.precio.superior}]]</label>
+                                    <input type="number" class="form-control" 
+                                           th:value="${precioSup}"
+                                           th:name="precioSup" required="true"/>
+                                </div>
+                            </div>
+                            <div class="card-footer text-center">
+                                <button type="submit" class="btn btn-info">
+                                    <i class="fas fa-check"></i> [[#{pruebas.jpql}]]
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+Recorte 013, ProductoDao.java
+============
+
+ //Ejemplo de método utilizando Consultas con SQL nativo
+    @Query(nativeQuery=true,
+            value="SELECT * FROM producto where producto.precio BETWEEN :precioInf AND :precioSup ORDER BY producto.descripcion ASC")
+    public List<Producto> metodoNativo(@Param("precioInf") double precioInf, @Param("precioSup") double precioSup); 
+
+Recorte 014, ProductoService.java
+============
+
+ //Lista de productos utilizando consultas con SQL Nativo
+    public List<Producto> metodoNativo(double precioInf, double precioSup);
+
+Recorte 015, ProductoServiceImpl.java
+============
+
+ @Override
+    @Transactional(readOnly=true)    
+    public List<Producto> metodoNativo(double precioInf, double precioSup) {
+        return productoDao.metodoNativo(precioInf, precioSup);
+    }
+
+Recorte 016, PruebasController.java
+============
+
+ @PostMapping("/query3")
+    public String consultaQuery3(@RequestParam(value = "precioInf") double precioInf,
+            @RequestParam(value = "precioSup") double precioSup, Model model) {
+        var productos = productoService.metodoJPQL(precioInf, precioSup);
+        model.addAttribute("productos", productos);
+        model.addAttribute("totalProductos", productos.size());
+        model.addAttribute("precioInf", precioInf);
+        model.addAttribute("precioSup", precioSup);
+        return "/pruebas/listado2";
+    }
+
+Recorte 017, pruebas\fragmentos.html
+============
+
+<div class="col-md-3">
+                    <form method="POST" th:action="@{/pruebas/query3}" 
+                          class="was-validated">
+                        <div class="card success">
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="precioInf">[[#{pruebas.precio.inferior}]]</label>
+                                    <input type="number" class="form-control" 
+                                           th:value="${precioInf}"
+                                           th:name="precioInf" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="precioSup">[[#{pruebas.precio.superior}]]</label>
+                                    <input type="number" class="form-control" 
+                                           th:value="${precioSup}"
+                                           th:name="precioSup" required="true"/>
+                                </div>
+                            </div>
+                            <div class="card-footer text-center">
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="fas fa-check"></i> [[#{pruebas.nativo}]]
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+
+==============================  Seguridad ==================
+
+Recorte 018, pom.xml
+============
+
+<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity6</artifactId>
+        </dependency>
+
+Recorte 019, login.html
+============
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://wwww.thymeleaf.org">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>TechShop</title>
+        <meta charset="UTF-8"/>
+    </head>
+    <body>
+        <header th:replace="~{layout/plantilla :: header}"/>
+        <div class="container my-5">
+            <div class="row align-items-center"> 
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-success"><h2>[[#{login.login}]]</h2></div>
+                        <div class="card-body">
+                            <form method="POST" th:action="@{/login}">
+                                <div class="form-group row my-3">
+                                    <label class="col-md-5 my-auto" for="username"><i class="fas fa-user-lock"></i>[[#{login.username}]]:</label>
+                                    <div class="col-md-7 my-auto">
+                                        <input class="form-control" type="text" name="username" id="username"/></div></div>
+                                <div class="form-group row my-3">
+                                    <label class="col-md-5 my-auto" for="password"><i class="fas fa-key"></i>[[#{login.password}]]</label>
+                                    <div class="col-md-7 my-auto"><input class="form-control" type="password" name="password" id="password"/></div></div>
+                                <div class="card-footer col text-center">
+                                    <button class="btn btn-primary" >
+                                        <a th:href="@{/registro/nuevo}" class="btn"><i class="fas fa-user-plus"></i> [[#{accion.registrar}]]</a></button>
+                                    <button class="btn btn-info" >                                        
+                                        <a th:href="@{/registro/recordar}" class="btn"><i class="fas fa-envelope"></i> [[#{accion.recordar}]]</a></button>
+                                    <button class="btn btn-success" type="submit">
+                                        <span class="btn"><i class="fas fa-sign-in-alt"></i>
+                                            [[#{login.login}]]</span></button>
+                                </div>
+                            </form>                            
+                        </div>
+                    </div>
+                    <div th:if="${param.error != null}">
+                        <h3>[[#{error.login}]]</h3>
+                    </div>
+                </div>
+            </div>           
+        </div>
+        <footer th:replace="~{layout/plantilla :: footer}"/>
+    </body>
+</html>
+
+
+Recorte 020, ProjectConfig.java
+============
+
+/* Los siguiente métodos son para implementar el tema de seguridad dentro del proyecto */
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/").setViewName("index");
+        registry.addViewController("/index").setViewName("index");
+        registry.addViewController("/login").setViewName("login");
+        registry.addViewController("/registro/nuevo").setViewName("/registro/nuevo");
+ }
+
+@Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests((request) -> request
+                .requestMatchers("/","/index","/errores/**",
+                        "/carrito/**","/pruebas/**","/reportes/**",
+                        "/registro/**","/js/**","/webjars/**")
+                        .permitAll()
+                .requestMatchers(
+                        "/producto/nuevo","/producto/guardar",
+                        "/producto/modificar/**","/producto/eliminar/**",
+                        "/categoria/nuevo","/categoria/guardar",
+                        "/categoria/modificar/**","/categoria/eliminar/**",
+                        "/usuario/nuevo","/usuario/guardar",
+                        "/usuario/modificar/**","/usuario/eliminar/**",
+                        "/reportes/**"
+                ).hasRole("ADMIN")
+                .requestMatchers(
+                        "/producto/listado",
+                        "/categoria/listado",
+                        "/usuario/listado"
+                ).hasAnyRole("ADMIN", "VENDEDOR")
+                .requestMatchers("/facturar/carrito")
+                .hasRole("USER")
+                )
+                .formLogin((form) -> form
+                .loginPage("/login").permitAll())
+                .logout((logout) -> logout.permitAll());
+        return http.build();
+    }
+
+/* El siguiente método se utiliza para completar la clase no es 
+    realmente funcional, la próxima semana se reemplaza con usuarios de BD */    
+    @Bean
+    public UserDetailsService users() {
+        UserDetails admin = User.builder()
+                .username("juan")
+                .password("{noop}123")
+                .roles("USER", "VENDEDOR", "ADMIN")
+                .build();
+        UserDetails sales = User.builder()
+                .username("rebeca")
+                .password("{noop}456")
+                .roles("USER", "VENDEDOR")
+                .build();
+        UserDetails user = User.builder()
+                .username("pedro")
+                .password("{noop}789")
+                .roles("USER")
+                .build();
+        return new InMemoryUserDetailsManager(user, sales, admin);
+    }
