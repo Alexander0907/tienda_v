@@ -71,7 +71,35 @@
                 </div>
             </div>
         </section>
-        
+
+
+        <h3 th:if="${totalProductos > 0}">
+            Resultados de la consulta (Total: <span th:text="${totalProductos}"></span> productos):
+        </h3>
+        <h3 th:if="${totalProductos == 0}">
+            No se encontraron productos en el rango seleccionado.
+        </h3>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Existencias</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="producto, iterStat : ${productos}">
+                    <td th:text="${iterStat.count}">1</td>
+                    <td th:text="${producto.descripcion}">Monitor</td>
+                    <td th:text="${producto.precio}">23000</td>
+                    <td th:text="${producto.existencias}">5</td>
+                </tr>
+            </tbody>
+        </table>
+
+
         <!-- 3 Sección para crear los filtros -->
         <section th:fragment="filtros" class="bg-light">
             <div class="row py-2">
@@ -155,6 +183,31 @@
                     </form>
                 </div>
             </div>
+
+            <div class="col-md-3">
+                <form method="POST" th:action="@{/pruebas/query4}" class="was-validated">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="min">Cantidad mínima</label>
+                                <input type="number" class="form-control" th:name="min" required="true" placeholder="Ej: 1"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="max">Cantidad máxima</label>
+                                <input type="number" class="form-control" th:name="max" required="true" placeholder="Ej: 5"/>
+                            </div>
+                        </div>
+                        <div class="card-footer text-center">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-search"></i> Consultar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+
         </section> 
-</body>
+    </body>
 </html>
