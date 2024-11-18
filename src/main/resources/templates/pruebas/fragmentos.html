@@ -184,29 +184,76 @@
                 </div>
             </div>
 
-            <div class="col-md-3">
-                <form method="POST" th:action="@{/pruebas/query4}" class="was-validated">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <label for="min">Cantidad mínima</label>
-                                <input type="number" class="form-control" th:name="min" required="true" placeholder="Ej: 1"/>
-                            </div>
-                            <div class="mb-3">
-                                <label for="max">Cantidad máxima</label>
-                                <input type="number" class="form-control" th:name="max" required="true" placeholder="Ej: 5"/>
-                            </div>
-                        </div>
-                        <div class="card-footer text-center">
-                            <button type="submit" class="btn btn-success">
-                                <i class="fas fa-search"></i> Consultar
-                            </button>
-                        </div>
+            <div class="row">
+    <!-- Consulta Ampliada -->
+    <div class="col-md-4">
+        <form method="POST" th:action="@{/pruebas/query4}" class="was-validated">
+            <div class="card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="min">Cantidad mínima</label>
+                        <input type="number" class="form-control" th:name="min" required="true" placeholder="Ej: 1" />
                     </div>
-                </form>
+                    <div class="mb-3">
+                        <label for="max">Cantidad máxima</label>
+                        <input type="number" class="form-control" th:name="max" required="true" placeholder="Ej: 5" />
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-search"></i> Consultar
+                    </button>
+                </div>
             </div>
+        </form>
+    </div>
 
+    <!-- Consulta JPQL -->
+    <div class="col-md-4">
+        <form method="POST" th:action="@{/pruebas/query5}" class="was-validated">
+            <div class="card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="min">Cantidad mínima</label>
+                        <input type="number" class="form-control" th:name="min" required="true" placeholder="Ej: 1" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="max">Cantidad máxima</label>
+                        <input type="number" class="form-control" th:name="max" required="true" placeholder="Ej: 5" />
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <button type="submit" class="btn btn-info">
+                        <i class="fas fa-search"></i> Consultar JPQL
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
 
+    <!-- Consulta SQL Nativa -->
+    <div class="col-md-4">
+        <form method="POST" th:action="@{/pruebas/query6}" class="was-validated">
+            <div class="card">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="min">Cantidad mínima</label>
+                        <input type="number" class="form-control" th:name="min" required="true" placeholder="Ej: 1" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="max">Cantidad máxima</label>
+                        <input type="number" class="form-control" th:name="max" required="true" placeholder="Ej: 5" />
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-search"></i> Consultar SQL Nativa
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
         </section> 
     </body>
