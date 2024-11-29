@@ -28,6 +28,7 @@ public class ProductoServiceImpl implements ProductoService {
     @Transactional(readOnly = true)
     public Producto getProducto(Producto producto) {
         return productoDao.findById(producto.getIdProducto()).orElse(null);
+
     }
 
     @Override
@@ -42,7 +43,7 @@ public class ProductoServiceImpl implements ProductoService {
         productoDao.delete(producto);
     }
 
-    // Lista de productos con precio entre ordendados por descripción ConsultaAmpliada
+    // Lista de productos con precio entre ordenados por descripción ConsultaAmpliada
     @Override
     @Transactional(readOnly = true)
     public List<Producto> findByPrecioBetweenOrderByDescripcion(double precioInf, double precioSup) {
@@ -60,8 +61,8 @@ public class ProductoServiceImpl implements ProductoService {
     public List<Producto> metodoNativo(double precioInf, double precioSup) {
         return productoDao.metodoNativo(precioInf, precioSup);
     }
-
-    @Override
+    
+        @Override
     @Transactional(readOnly = true)
     public List<Producto> findProductosByExistenciasRange(int min, int max) {
         return productoDao.findProductosByExistenciasRange(min, max);
@@ -78,5 +79,4 @@ public class ProductoServiceImpl implements ProductoService {
     public List<Producto> findProductosByExistenciasNativas(int min, int max) {
         return productoDao.findProductosByExistenciasNativas(min, max);
     }
-
 }

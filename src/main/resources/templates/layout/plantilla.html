@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
-
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     <head th:fragment="head">
         <title>Techshop</title>
         <meta charset="UTF-8">
-            <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
-            <link th:href="@{/webjars/font-awesome/css/all.css}" rel="stylesheet"/>
-            <script th:src="@{/js/rutinas.js}"></script>
-            <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
-            <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
-            <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+      <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+        <link th:href="@{/webjars/font-awesome/css/all.css}" rel="stylesheet"/>
+        <script th:src="@{/js/rutinas.js}"></script>
+        <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+        <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+        <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>   
     </head>
-
     <body>
         <header th:fragment="header" class="header">
             <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
@@ -46,30 +46,28 @@
                                 </ul>
                             </li>
                         </ul>
-
                         <div>
-                            <ul class="navbar-nav" sec:authorize="!isAuthenticated()">
-                                <li class="nav-item px-2">
-                                    <a class="nav-menu-link nav-link" th:href="@{/login}">
-                                        <i class='fas fa-sign-in-alt'></i>
-                                    </a>
-                                </li>                            
-                            </ul>
-                            <ul class="navbar-nav" sec:authorize="isAuthenticated()">
-                                <li class="nav-item text-white my-auto">
-                                    <img th:src="@{${session.usuarioImagen}}" alt="your image" height="40" class="rounded-circle"/>
-                                    <span sec:authentication='name'>Santi</span>
-                                </li>
-                                <li class="nav-item my-auto">
-                                    <form method="post" th:action="@{/logout}">
-                                        <button class="btn btn-dark">
-                                            <i class="fas fa-sign-out-alt"></i>
-                                        </button>
-                                    </form>
-                                </li>                            
-                            </ul>
-                        </div>
-
+                        <ul class="navbar-nav" sec:authorize="!isAuthenticated()">
+                            <li class="nav-item px-2">
+                                <a class="nav-menu-link nav-link" th:href="@{/login}">
+                                    <i class='fas fa-sign-in-alt'></i>
+                                </a>
+                            </li>                            
+                        </ul>
+                        <ul class="navbar-nav" sec:authorize="isAuthenticated()">
+                            <li class="nav-item text-white my-auto">
+                                <img th:src="@{${session.usuarioImagen}}" alt="your image" height="40" class="rounded-circle"/>
+                                <span sec:authentication='name'>Santi</span>
+                            </li>
+                            <li class="nav-item my-auto">
+                                <form method="post" th:action="@{/logout}">
+                                    <button class="btn btn-dark">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                    </button>
+                                </form>
+                            </li>                            
+                        </ul>
+                    </div>
 
                     </div>
                 </div>
@@ -84,7 +82,6 @@
                 </div>
             </section>
         </header>
-
         <footer th:fragment="footer" class="bg-info text-white mt-5 p-2">
             <div class="container">
                 <div class="col">

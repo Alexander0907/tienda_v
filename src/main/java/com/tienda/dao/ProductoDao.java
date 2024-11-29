@@ -1,10 +1,16 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
+ */
 package com.tienda.dao;
 
 import com.tienda.domain.Producto;
 import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
 
 public interface ProductoDao extends JpaRepository<Producto, Long> {
 
@@ -19,7 +25,7 @@ public interface ProductoDao extends JpaRepository<Producto, Long> {
     @Query(nativeQuery = true,
             value = "SELECT * FROM producto where producto.precio BETWEEN :precioInf AND :precioSup ORDER BY producto.descripcion ASC")
     public List<Producto> metodoNativo(@Param("precioInf") double precioInf, @Param("precioSup") double precioSup);
-
+    
     // Consulta para encontrar productos por rango exacto de existencias
     @Query("SELECT p FROM Producto p WHERE p.existencias BETWEEN :min AND :max")
     List<Producto> findProductosByExistenciasRange(@Param("min") int min, @Param("max") int max);
@@ -30,5 +36,4 @@ public interface ProductoDao extends JpaRepository<Producto, Long> {
     @Query(nativeQuery = true,
             value = "SELECT * FROM producto WHERE existencias BETWEEN :min AND :max ORDER BY descripcion")
     List<Producto> findProductosByExistenciasNativas(@Param("min") int min, @Param("max") int max);
-
 }

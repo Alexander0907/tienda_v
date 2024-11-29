@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
+ */
 package com.tienda.service;
 
 import com.tienda.domain.Producto;
@@ -27,13 +31,10 @@ public interface ProductoService {
     //Lista de productos utilizando consultas con SQL Nativo
     public List<Producto> metodoNativo(double precioInf, double precioSup);
 
-  // Consulta de productos en un rango de existencias
+       // Consulta de productos en un rango de existencias
 List<Producto> findProductosByExistenciasRange(int min, int max);
 
 List<Producto> findProductosByExistenciasJPQL(int min, int max);
 
 List<Producto> findProductosByExistenciasNativas(int min, int max);
-
-
-
 }

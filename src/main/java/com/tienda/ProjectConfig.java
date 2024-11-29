@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -20,6 +19,7 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 public class ProjectConfig implements WebMvcConfigurer {
@@ -57,8 +57,7 @@ public class ProjectConfig implements WebMvcConfigurer {
         return messageSource;
     }
     
-    
-/* Los siguiente métodos son para implementar el tema de seguridad dentro del proyecto */
+    /* Los siguiente métodos son para implementar el tema de seguridad dentro del proyecto */
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("index");
@@ -119,7 +118,6 @@ public class ProjectConfig implements WebMvcConfigurer {
                 .build();
         return new InMemoryUserDetailsManager(user, sales, admin);
     }
-    
      @Autowired
     private UserDetailsService userDetailsService;
 

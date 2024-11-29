@@ -1,0 +1,278 @@
+Recorte 001 (La nueva clase Producto.java)
+===========
+package com.tienda.domain;​
+
+import jakarta.persistence.*;​
+import java.io.Serializable;​
+import lombok.Data;​
+
+
+@Data​
+@Entity​
+@Table(name="producto")​
+public class Producto implements Serializable {​
+    private static final long serialVersionUID = 1L;​
+
+    @Id​
+    @GeneratedValue(strategy = GenerationType.IDENTITY)​
+    @Column(name="id_producto")​
+    private Long idProducto;    ​
+    private String descripcion;​
+    private String detalle;​
+    private double precio;​
+    private int existencias;​
+    private String rutaImagen;​
+    private boolean activo;​
+
+    @ManyToOne​
+    @JoinColumn(name="id_categoria")​
+    Categoria categoria;​
+
+    public Producto() {        ​
+    }​
+
+
+    public Producto(String descripcion, String detalle, double precio, int existencias, String imagen, boolean activo) {​
+        this.descripcion = descripcion;​
+        this.detalle = detalle;​
+        this.precio = precio;​
+        this.existencias = existencias;​
+        this.rutaImagen = imagen;​
+        this.activo = activo;​
+    }​
+}
+
+
+Recorte 002 (Ajuste en la clase Categoria.java)
+===========
+
+@OneToMany
+@JoinColumn(name="id_categoria")
+List<Producto> productos;
+
+Recorte 003 (Ajuste del fragmento agregarProducto)
+===========
+
+<select name="categoria.idCategoria" 
+
+Recorte 004 (Ajuste en la clase fragmento listadoProductos)
+===========
+<!-- 3 Sección principal para mostrar la informaccion de la entidad producto -->​
+        <section th:fragment="listadoProductos" id="productos">​
+            <div class="container">​
+                <div class="row">​
+                    <div class="col-md-10">​
+                        <div class="card">​
+                            <div class="card-header">​
+                                <h4>[[#{producto.listado}]]</h4></div>​
+                            <div th:if="${productos != null and !productos.empty}" >​
+                                <table class="table table-striped table-hover fs-6">​
+                                    <thead class="table-dark">​
+                                        <tr><th>#</th>​
+                                            <th class="text-center">[[#{producto.descripcion}]]</th>​
+                                            <th class="text-center">[[#{producto.precio}]]</th>​
+                                            <th class="text-center">[[#{producto.existencias}]]</th>​
+                                            <th class="text-center">[[#{producto.total}]]</th>​
+                                            <th class="text-center">[[#{producto.activo}]]</th>​
+                                            <th class="text-center">[[#{producto.categoria}]]</th>​
+                                            <th></th><th></th></tr>​
+                                    </thead>​
+                                    <tbody>​
+                                        <tr th:each="producto, contador : ${productos}">​
+                                            <td class="text-center">[[${contador.count}]]</td>​
+                                            <td class="fs-6">[[${producto.descripcion}]]</td>​
+                                        <td class="text-end">[[${#numbers.formatDecimal(producto.precio, 1, 'DEFAULT', 2, 'DEFAULT')}]]</td>​
+                                            <td class="text-center">[[${producto.existencias}]]</td>​
+                                            <td class="text-end">[[${#numbers.formatDecimal(producto.precio*producto.existencias, 1, 'DEFAULT', 2, 'DEFAULT')}]]</td>​
+             <td  class="text-center" th:text="${producto.activo} ? 'Activa' : 'Inactiva'"/>​
+                                            <td>[[${producto.categoria.descripcion}]]</td>​
+                                            <td><a th:href="@{/producto/eliminar/}+${producto.idProducto}"​
+                                                   class="btn btn-danger">​
+                                                    <i class="fas fa-trash"></i> [[#{accion.eliminar}]]</a></td>​
+                                            <td>​
+                                                <a th:href="@{/producto/modificar/}+${producto.idProducto}"​
+                                                   class="btn btn-success">​
+                                                    <i class="fas fa-pencil"></i> [[#{accion.actualizar}]]</a></td></tr>​
+                                    </tbody>​
+                                </table>​
+                            </div>​
+                            <div class="text-center p-2" th:if="${productos == null or productos.empty}">​
+                                <span>[[#{lista.vacia}]]</span>​
+                            </div>​
+                        </div>​
+                    </div>​
+                    <div class="col-md-2">​
+                        <div class="card text-center bg-success text-white mb-3">​
+                            <div class="card-body">​
+                                <h3>[[#{producto.total}]]</h3>​
+                                <h4 class="fs-2"><i class="fas fa-users"></i> [[${totalProductos}]]</h4>​
+                            </div>​
+                        </div>​
+                    </div>​
+                </div>​
+            </div>​
+        </section>​
+
+
+Recorte 005 (Ajuste en la clase fragmento editarProducto)
+===========
+<select th:field="*{categoria.idCategoria}"
+
+
+Recorte 006 (Agregando menu)
+===========
+ <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" 
+                                   data-bs-toggle="dropdown" 
+                                   href="#" 
+                                   role="button" 
+                                   aria-expanded="false">[[#{plantilla.pruebas}]]</a>
+                                <ul class="dropdown-menu dropdown-menu-dark">
+                                    <li><a class="dropdown-item"  th:href="@{/pruebas/listado}">[[#{plantilla.asociaciones}]]</a></li>
+                                </ul>
+                            </li>
+
+
+Recorte 007 (pruebas/listado.html)
+===========
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>TechShop</title>
+    </head>
+    <body>
+        <header th:replace="~{layout/plantilla :: header}"/>
+
+        <section th:replace="~{pruebas/fragmentos :: categoriasTabs}"/>
+        <section th:replace="~{pruebas/fragmentos :: listadoProductos}"/>
+
+        <footer th:replace="~{layout/plantilla :: footer}"/>       
+    </body>
+</html>
+
+
+Recorte 008 (pruebas/fragmentos.html)
+===========
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>TechShop</title>
+    </head>
+    <body>
+        <!-- 1 Sección principal para mostrar la informaccion de las categorias -->
+        <section th:fragment="categoriasTabs" id="categorias">
+            <div class="row py-4">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link" 
+                           aria-current="page" 
+                           href="/pruebas/listado"
+                           >[[#{pruebas.todas}]]</a>
+                    </li>
+                    <li th:each="categoria : ${categorias}" class="nav-item">
+                        <a class="nav-link" 
+                           th:href="@{/pruebas/listado/}+${categoria.idCategoria}"
+                           >[[${categoria.descripcion}]]</a>
+                    </li>                    
+                </ul>
+            </div>
+        </section>
+
+        <!-- 2 Sección principal para mostrar la informaccion de las productos -->
+        <section th:fragment="listadoProductos" id="productos">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>[[#{producto.listado}]]</h4></div>
+                            <div th:if="${productos != null and !productos.empty}">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark">
+                                        <tr><th class="text-center">#</th>
+                                            <th class="text-center">[[#{producto.descripcion}]]</th>
+                                            <th class="text-center">[[#{producto.precio}]]</th>
+                                            <th class="text-center">[[#{producto.existencias}]]</th>
+                                            <th class="text-center">[[#{producto.total}]]</th>
+                                            <th class="text-center">[[#{producto.activo}]]</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="producto, contador : ${productos}">
+                                            <td class="text-center">[[${contador.count}]]</td>
+                                            <td>[[${producto.descripcion}]]</td>
+                                            <td class="text-end">[[${#numbers.formatDecimal(producto.precio, 1, 'DEFAULT', 2, 'DEFAULT')}]]</td>
+                                            <td class="text-center">[[${producto.existencias}]]</td>
+                                            <td class="text-end">[[${#numbers.formatDecimal(producto.precio*producto.existencias, 1, 'DEFAULT', 2, 'DEFAULT')}]]</td>
+                                            <td th:text="${producto.activo} ? 'Activa' : 'Inactiva'" />
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center p-2" th:if="${productos == null or productos.empty}">
+                                <span>[[#{lista.vacia}]]</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center bg-success text-white mb-3">
+                            <div class="card-body">
+                                <h3>[[#{producto.total}]]</h3>
+                                <h4 class="fs-2"><i class="fas fa-users"></i> [[${totalProductos}]]</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+</body>
+</html>
+
+Recorte 009 (PruebasController.java)
+===========
+
+package com.tienda.controller;
+
+import com.tienda.domain.Categoria;
+import com.tienda.service.CategoriaService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import com.tienda.service.ProductoService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Controller
+@RequestMapping("/pruebas")
+public class PruebasController {
+
+    @Autowired
+    private ProductoService productoService;
+    @Autowired
+    private CategoriaService categoriaService;
+
+    @GetMapping("/listado")
+    public String listado(Model model) {
+        var productos = productoService.getProductos(false);
+        var categorias = categoriaService.getCategorias(false);
+        model.addAttribute("productos", productos);
+        model.addAttribute("totalProductos", productos.size());
+        model.addAttribute("categorias", categorias);
+        return "/pruebas/listado";
+    }
+
+    @GetMapping("/listado/{idCategoria}")
+    public String listado(Model model, Categoria categoria) {
+        var productos = categoriaService.getCategoria(categoria).getProductos();
+        var categorias = categoriaService.getCategorias(false);
+        model.addAttribute("productos", productos);
+        model.addAttribute("totalProductos", productos.size());
+        model.addAttribute("categorias", categorias);
+        return "/pruebas/listado";
+    }
+}

@@ -81,41 +81,4 @@ public class PruebasController {
         return "/pruebas/consulta";
     }
 
-    @PostMapping("/query4")
-    public String consultaExistencias(@RequestParam(value = "min") int min,
-            @RequestParam(value = "max") int max,
-            Model model) {
-        // Realiza la consulta a través del servicio
-        var productos = productoService.findProductosByExistenciasRange(min, max);
-        model.addAttribute("productos", productos);
-        model.addAttribute("min", min);
-        model.addAttribute("max", max);
-        model.addAttribute("totalProductos", productos.size());
-        return "/pruebas/consulta"; // Redirige a la vista con los resultados
-    }
-
-    @PostMapping("/query5")
-    public String consultaExistenciasJPQL(@RequestParam(value = "min") int min,
-            @RequestParam(value = "max") int max,
-            Model model) {
-        var productos = productoService.findProductosByExistenciasJPQL(min, max);
-        model.addAttribute("productos", productos);
-        model.addAttribute("min", min);
-        model.addAttribute("max", max);
-        model.addAttribute("totalProductos", productos.size());
-        return "/pruebas/consulta"; // Redirige a la misma vista de resultados
-    }
-
-    @PostMapping("/query6")
-    public String consultaExistenciasNativas(@RequestParam(value = "min") int min,
-            @RequestParam(value = "max") int max,
-            Model model) {
-        var productos = productoService.findProductosByExistenciasNativas(min, max);
-        model.addAttribute("productos", productos);
-        model.addAttribute("min", min);
-        model.addAttribute("max", max);
-        model.addAttribute("totalProductos", productos.size());
-        return "/pruebas/consulta"; // Redirige a la misma vista de resultados
-    }
-
 }

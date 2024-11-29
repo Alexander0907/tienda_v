@@ -19,23 +19,18 @@ public class ProductoController {
 
     @Autowired
     private ProductoService productoService;
-
-    // Cambiar el nombre de la variable para que sea de tipo CategoriaService
+    
     @Autowired
     private CategoriaService categoriaService;
-
-    @Autowired
-    private FirebaseStorageServiceImpl firebaseStorageService;
 
     @GetMapping("/listado")
     public String listado(Model model) {
         var lista = productoService.getProductos(false);
         model.addAttribute("productos", lista);
-
-        // Corregido: usar addAttribute en lugar de addAllAttributes
+        
         var categorias = categoriaService.getCategorias(true);
-        model.addAttribute("Categorias", categorias);  // Cambiado aquí
-
+        model.addAttribute("categorias",categorias);
+        
         model.addAttribute("totalProductos", lista.size());
         return "/producto/listado";
     }
@@ -44,6 +39,9 @@ public class ProductoController {
     public String productoNuevo(Producto producto) {
         return "/producto/modifica";
     }
+
+    @Autowired
+    private FirebaseStorageServiceImpl firebaseStorageService;
 
     @PostMapping("/guardar")
     public String productoGuardar(Producto producto,
@@ -70,10 +68,10 @@ public class ProductoController {
     public String productoModificar(Producto producto, Model model) {
         producto = productoService.getProducto(producto);
         model.addAttribute("producto", producto);
-
+        
         var categorias = categoriaService.getCategorias(false);
-        model.addAttribute("Categorias", categorias);  // Cambiado aquí
-
+        model.addAttribute("categorias",categorias);
+        
         return "/producto/modifica";
     }
 }
